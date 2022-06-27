@@ -1,15 +1,30 @@
-const parser = (str, separator = '-', position = -1) => {
+const codecParamsParser = (str) => {
+    const regex = new RegExp(`(-[a-zA-Z0-9]+-params[ ]+[^ ]+)`)
+    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+}
+
+const quoteParamsParser = (str) => {
+    const regex = new RegExp(`(-[a-zA-Z0-9_-]+[ ]+(?:"(?:[^"]+)"|\'(?:[^\']+)\'))`)
+    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+}
+
+const ffmpegSimgleParamParser = (str) => {
+    const regex = new RegExp(`(-[a-zA-Z0-9_-]+[ ]+)`)
+    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+}
+
+const ffmpegParamsParser = (str, separator = '-', position = -1) => {
     const result = []
     const regex = position < 0 ? new RegExp(`(?<=${separator})`) : new RegExp(`(?=[ ]${separator})`)
-    const params = str.trim().split(regex)
+    const params = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
 
     params.forEach(param => {
-        const paramArr = param.trim().split(" ")
+        const paramArr = ffmpegSimgleParamParser(param)
 
         if ('-lavfi' == paramArr[0] || '-filter_complex' == paramArr[0]) {
             result.push({
                 name: paramArr[0],
-                value: parser(paramArr[paramArr.length - 1], ';', -1)
+                value: ffmpegParamsParser(paramArr[paramArr.length - 1], ';', -1)
             })
         } else {
             result.push({
@@ -39,19 +54,22 @@ const dump = (params, deep = -1) => {
 
 const format = cmd => {
     let result = []
-    const regex = new RegExp(`(-[a-zA-Z0-9]+-params[ ]+[^ ]+)`)
-    const params = cmd.trim().split(regex)
+    const codectedParams = codecParamsParser(cmd)
 
-    params.forEach(param => {
+    codectedParams.forEach(param => {
         if (haveCodecParams(param)) {
-            const paramArr = param.trim().split(" ")
+            const paramArr = ffmpegSimgleParamParser(param)
             result.push({
                 name: paramArr[0],
-                value: parser(paramArr[paramArr.length - 1], ':', -1)
+                value: ffmpegParamsParser(paramArr[paramArr.length - 1], ':', -1)
             })
         } else {
-            const t = parser(param, '-', 1)
-            result = [...result, ...t]
+            const quotedParams = quoteParamsParser(param)
+            quotedParams.forEach(quotedParam => {
+                const t = ffmpegParamsParser(quotedParam, '-', 1)
+                result = [...result, ...t]
+            })
+            
         }
     })
     return dump(result)

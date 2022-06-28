@@ -1,3 +1,7 @@
+const haveCodecParams = str => {
+    return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
+}
+
 const codecParamsParser = (str) => {
     const regex = new RegExp(`(-[a-zA-Z0-9]+-params[ ]+[^ ]+)`)
     return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
@@ -73,10 +77,6 @@ const format = cmd => {
         }
     })
     return dump(result)
-}
-
-const haveCodecParams = str => {
-    return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
 }
 
 const test = () => {

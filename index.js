@@ -2,6 +2,14 @@ const haveCodecParams = str => {
     return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
 }
 
+/**
+ * TODO: 去重
+ * */
+const filterPadsParser = (str) => {
+    const regex = new RegExp(`(?<=\\[)(.+?)(?=\\])`, 'g')
+    return str.match(regex).map(x => x.trim()).filter(x => '' !== x)
+}
+
 const codecParamsParser = (str) => {
     const regex = new RegExp(`(-[a-zA-Z0-9]+-params[ ]+[^ ]+)`)
     return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)

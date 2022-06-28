@@ -10,6 +10,11 @@ const filterPadsParser = (str) => {
     return str.match(regex).map(x => x.trim()).filter(x => '' !== x)
 }
 
+const filterOptParser = (str) => {
+    const regex = new RegExp(`(?:\\[)[^\\[\\]]*(?:\\])`)
+    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+}
+
 const codecParamsParser = (str) => {
     const regex = new RegExp(`(-[a-zA-Z0-9]+-params[ ]+[^ ]+)`)
     return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)

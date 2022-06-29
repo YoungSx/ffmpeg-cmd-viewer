@@ -7,19 +7,34 @@ const haveCodecParams = str => {
  * */
 const filterPadsParser = (str) => {
     const regex = new RegExp(`(?<=\\[)(.+?)(?=\\])`, 'g')
-    return str.match(regex).map(x => x.trim()).filter(x => '' !== x)
+    const result = str.match(regex)
+    return result instanceof Array ? result.map(x => x.trim()).filter(x => '' !== x) : []
 }
 
 const filterPadsInParser = (str) => {
     const filterPadsInStringParser = (str) => {
         const regex = new RegExp(`^(\\[\\S*?(?:\\]))+`, 'g')
-        return str.match(regex).map(x => x.trim()).filter(x => '' !== x)
+        const result = str.match(regex)
+        return result instanceof Array ? result.map(x => x.trim()).filter(x => '' !== x) : []
     }
 
     const padsInStrings = filterPadsInStringParser(str)
     const padsInString = padsInStrings.length > 0 ? padsInStrings[0] : ''
 
     return filterPadsParser(padsInString)
+}
+
+const filterPadsOutParser = (str) => {
+    const filterPadsOutStringParser = (str) => {
+        const regex = new RegExp(`(?<=[^\\]])((\\[\\w*(?:\\]))+$)`, 'g')
+        const result = str.match(regex)
+        return result instanceof Array ? result.map(x => x.trim()).filter(x => '' !== x) : []
+    }
+
+    const padsOutStrings = filterPadsOutStringParser(str)
+    const padsOutString = padsOutStrings.length > 0 ? padsOutStrings[0] : ''
+
+    return filterPadsParser(padsOutString)
 }
 
 const filterOptParser = (str) => {

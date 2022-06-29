@@ -10,6 +10,18 @@ const filterPadsParser = (str) => {
     return str.match(regex).map(x => x.trim()).filter(x => '' !== x)
 }
 
+const filterPadsInParser = (str) => {
+    const filterPadsInStringParser = (str) => {
+        const regex = new RegExp(`^(\\[\\S*?(?:\\]))+`, 'g')
+        return str.match(regex).map(x => x.trim()).filter(x => '' !== x)
+    }
+
+    const padsInStrings = filterPadsInStringParser(str)
+    const padsInString = padsInStrings.length > 0 ? padsInStrings[0] : ''
+
+    return filterPadsParser(padsInString)
+}
+
 const filterOptParser = (str) => {
     const regex = new RegExp(`(?:\\[)[^\\[\\]]*(?:\\])`)
     return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)

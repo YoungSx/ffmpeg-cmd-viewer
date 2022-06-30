@@ -54,7 +54,15 @@ const quoteParamsParser = (str) => {
 
 const ffmpegSimgleParamParser = (str) => {
     const regex = new RegExp(`(-[a-zA-Z0-9_-]+[ ]+)`)
-    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+    const regexQuote = new RegExp(`(((?<=\\')(.*)(?=\\'))|((?<=\\")(.*)(?=\\")))`, 'g')
+    result = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+
+    if (result.length >= 2) {
+        if (result[1].search(regexQuote) > 0) result[1] = result[1].match(regexQuote)[0]
+    }
+    return result
+}
+
 }
 
 const ffmpegParamsParser = (str, separator = '-', position = -1) => {

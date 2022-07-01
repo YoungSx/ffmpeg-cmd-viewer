@@ -2,6 +2,11 @@ const haveCodecParams = str => {
     return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
 }
 
+const filterStringParser = (str) => {
+    const regex = new RegExp(`(?:;)`)
+    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
+}
+
 /**
  * TODO: 去重
  * */

@@ -68,6 +68,32 @@ const ffmpegSimgleParamParser = (str) => {
     return result
 }
 
+
+/** 
+ * Interface FilterStruct {
+ *     in: Array<string>;
+ *     opt: string;
+ *     out: Array<string>;
+ * }
+ * 
+ * Interface FilterStruct: Array<FilterStruct>
+ */
+const filterComplexParser = (str) => {
+    const result = []
+    const filters = filterStringParser(ffmpegSimgleParamParser(str)[1])
+
+    filters.forEach(filter => {
+        const filterStruct = {
+            in: filterPadsInParser(filter),
+            opt: filterOptParser(filter),
+            out: filterPadsOutParser(filter)
+        }
+
+        result.push(filterStruct)
+    })
+
+    return result
+}
 }
 
 const ffmpegParamsParser = (str, separator = '-', position = -1) => {

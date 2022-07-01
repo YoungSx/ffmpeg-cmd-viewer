@@ -121,6 +121,19 @@ const filterComplexRelation = (filterStructs) => {
     }
 }
 
+const filterComplexGraph = (filters, filtersRelation) => {
+    for (let i = 0; i < filters.length; i++) {
+        const sourceFilter = filters[i]
+        const opt = sourceFilter['opt']
+        for (let j = 0; j < sourceFilter['out'].length; j++) {
+            const outPad = sourceFilter['out'][j]
+            const targetPos = filtersRelation['toMap'].get(outPad) // [filterIndex, inPadIndex]
+            const targetFilter = filters[targetPos[0]]
+            console.log(`${opt[0]}[${outPad}] -> [${targetFilter['in'][targetPos[1]]}]${targetFilter['opt'][0]}`)
+        }
+    }
+}
+
 const ffmpegParamsParser = (str, separator = '-', position = -1) => {
     const result = []
     const regex = position < 0 ? new RegExp(`(?<=${separator})`) : new RegExp(`(?=[ ]${separator})`)

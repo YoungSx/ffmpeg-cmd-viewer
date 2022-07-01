@@ -94,6 +94,31 @@ const filterComplexParser = (str) => {
 
     return result
 }
+
+const filterComplexRelation = (filterStructs) => {
+    const padsFromMap = new Map()
+    const padsToMap = new Map()
+
+    for (let i = 0; i < filterStructs.length; i++) {
+        const filterStruct = filterStructs[i]
+        const inPads = filterStruct['in']
+        const outPads = filterStruct['out']
+
+        for (let j = 0; j < inPads.length; j++) {
+            const inPad = inPads[j]
+            padsToMap.set(inPad, [i, j])
+        }
+
+        for (let j = 0; j < outPads.length; j++) {
+            const outPad = outPads[j]
+            padsFromMap.set(outPad, [i, j])
+        }
+    }
+
+    return {
+        "fromMap": padsFromMap,
+        "toMap": padsToMap
+    }
 }
 
 const ffmpegParamsParser = (str, separator = '-', position = -1) => {

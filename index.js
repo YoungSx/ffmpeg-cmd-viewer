@@ -106,12 +106,12 @@ const filterComplexRelation = (filterStructs) => {
 
         for (let j = 0; j < inPads.length; j++) {
             const inPad = inPads[j]
-            padsToMap.set(inPad, [i, j])
+            padsToMap.set(inPad, [i, j])  // [filterIndex, inPadIndex]
         }
 
         for (let j = 0; j < outPads.length; j++) {
             const outPad = outPads[j]
-            padsFromMap.set(outPad, [i, j])
+            padsFromMap.set(outPad, [i, j])  // [filterIndex, inPadIndex]
         }
     }
 

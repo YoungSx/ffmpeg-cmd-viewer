@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFmpeg CMD Viewer Demo</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>FFmpeg CMD Viewer</h1>
+    <div>
+        <pre id="cmd-view-area">
+        </pre>
+    </div>
+    <script type="module">
+        const cmd = "/data/workspace/ffmpeg_compare   -i  /data/workspace/frame_align/cut_5min_sei_added.flv  -i /data/workspace/frame_align/4000_out.flv -hide_banner -max_muxing_queue_size 1024 -an -lavfi '[0:v]scale=1920:1080:flags=lanczos[ref];[1:v]scale=1920:1080:flags=lanczos[distorted];[ref][distorted]frame_align[ref_frame_align_out][distorted_frame_align_out];[ref_frame_align_out]split=2[ref_psnr_in][ref_ssim_in];[distorted_frame_align_out]split=2[distorted_psnr_in][distorted_ssim_in];[ref_psnr_in][distorted_psnr_in]psnr=frame_sync_type=nframes:stats_file=/data/workspace/result_psnr.txt;[ref_ssim_in][distorted_ssim_in]ssim=frame_sync_type=nframes:stats_file=/data/workspace/vmaf_id_0_ssim.txt' -x264-params threads=1:br=1000:maxrate=1000:minrate=1000:bufsize=1000 -f null -"
+
+        import fcv from './src/index.js'
+        document.querySelector("#cmd-view-area").innerHTML = fcv.format(cmd)
+    </script>
+    <svg id="svg-ele" width="100%"></svg>
+    <script>
+        let svgEle = document.querySelector("#svg-ele")
+        svgEle.width = "2000"
+    </script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+    
+    <script type="module">
+        import fcv from './src/index.js'
+        const cmd2 = "/data/workspace/ffmpeg_compare   -i  /data/workspace/frame_align/cut_5min_sei_added.flv  -i /data/workspace/frame_align/4000_out.flv -hide_banner -max_muxing_queue_size 1024 -an -lavfi '[0:v]scale=1920:1080:flags=lanczos[ref];[1:v]scale=1920:1080:flags=lanczos[distorted];[ref][distorted]frame_align[ref_frame_align_out][distorted_frame_align_out];[ref_frame_align_out]split=2[ref_psnr_in][ref_ssim_in];[distorted_frame_align_out]split=2[distorted_psnr_in][distorted_ssim_in];[ref_psnr_in][distorted_psnr_in]psnr=frame_sync_type=nframes:stats_file=/data/workspace/result_psnr.txt;[ref_ssim_in][distorted_ssim_in]ssim=frame_sync_type=nframes:stats_file=/data/workspace/vmaf_id_0_ssim.txt' -x264-params threads=1:br=1000:maxrate=1000:minrate=1000:bufsize=1000 -f null -"
+        const t = fcv.filterComplexGraphD3Data(fcv.parser(cmd2))
+        const n = t["nodes"]
+        const e = t["edges"]
+
+        let dataset = {
+            nodes: n,
+            edges: e
+        }
+        let g = new dagreD3.graphlib.Graph()
+        g.setGraph({
+            rankdir: 'LR',
+            align: 'UL',
+            nodesep: 50,
+            edgesep: 10,
+            ranksep: 50,
+        })
+        dataset.nodes.forEach(item => {
+            g.setNode(item.id, {
+                label: item.label,
+                shape: item.shape,
+                style: "fill:#ECECFF;stroke:#9370DB",
+                labelStyle: "fill:#000"
+            })
+        })
+        dataset.edges.forEach(item => {
+            g.setEdge(item.source, item.target, {
+                label: item.label,
+                style: "fill:transparent;stroke:#000;stroke-width:1.5px",
+                labelStyle: "fill:#1890ff",
+                arrowhead: "vee",
+                arrowheadStyle: "fill:#000"
+            })
+        })
+        let render = new dagreD3.render()
+
+        let svg = d3.select('svg')
+        let svgGroup = svg.append('g')
+
+        render(svgGroup, g)
+
+        // Center the graph
+        var xCenterOffset = (svg.attr('width') - g.graph().width) / 2
+        svg.attr('height', g.graph().height + 40)
+        svg.attr('width', g.graph().width)
+    </script>
+</body>
+
+</html>

@@ -134,6 +134,40 @@ const filterComplexGraph = (filters, filtersRelation) => {
     }
 }
 
+const filterComplexGraphNode = (filters) => {
+    const result = []
+
+    for (let i = 0; i < filters.length; i++) {
+        result.push({
+            "id": `${i}:${filters[i]['opt']}`,
+            "label": `${filters[i]['opt']}`,
+            "shape": "rect"
+        })
+    }
+    return result
+}
+
+const filterComplexGraphLink = (filters, filtersRelation) => {
+    const result= []
+
+    for (let i = 0; i < filters.length; i++) {
+        const sourceFilter = filters[i]
+        const opt = sourceFilter['opt']
+        for (let j = 0; j < sourceFilter['out'].length; j++) {
+            const outPad = sourceFilter['out'][j]
+            const targetPos = filtersRelation['toMap'].get(outPad) // [filterIndex, inPadIndex]
+            const targetFilter = filters[targetPos[0]]
+            result.push({
+                "source": `${i}:${sourceFilter['opt']}`,
+                "target": `${targetPos[0]}:${targetFilter['opt'][0]}`,
+                "label": outPad
+            })
+        }
+    }
+
+    return result
+}
+
 const ffmpegParamsParser = (str, separator = '-', position = -1) => {
     const result = []
     const regex = position < 0 ? new RegExp(`(?<=${separator})`) : new RegExp(`(?=[ ]${separator})`)

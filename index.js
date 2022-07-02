@@ -170,7 +170,7 @@ const filterComplexGraphLink = (filters, filtersRelation) => {
 
 const ffmpegParamsParser = (str, separator = '-', position = -1) => {
     const result = []
-    const regex = position < 0 ? new RegExp(`(?<=${separator})`) : new RegExp(`(?=[ ]${separator})`)
+    const regex = position < 0 ? new RegExp(`(?:${separator})`) : new RegExp(`(?=[ ]${separator})`)
     const params = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
 
     params.forEach(param => {

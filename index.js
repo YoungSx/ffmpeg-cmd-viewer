@@ -63,7 +63,6 @@ const ffmpegSingleParamParser = (str) => {
     return result
 }
 
-
 /** 
  * Interface FilterStruct {
  *     in: Array<string>;
@@ -116,15 +115,21 @@ const filterComplexRelation = (filterStructs) => {
     }
 }
 
-const filterComplexGraphD3Data = (filterDicts) => {
-    for (let i = 0; i < filterDicts.length; i++) {
-        const filters = filterComplexParser(filterDicts)
-        const filtersRelation = filterComplexRelation(filters)
-    
-        return {
-            "nodes": filterComplexGraphNode(filters),
-            "edges": filterComplexGraphLink(filters, filtersRelation)
+const filterComplexGraphD3Data = (list) => {
+    let filterDicts = []
+
+    for (let i = 0; i < list.length; i++)
+        if ('-lavfi' == list[i]['name'] || '-filter_complex' == list[i]['name']) {
+            filterDicts = list[i]['value']
+            break
         }
+
+    const filters = filterComplexParser(filterDicts)
+    const filtersRelation = filterComplexRelation(filters)
+
+    return {
+        "nodes": filterComplexGraphNode(filters),
+        "edges": filterComplexGraphLink(filters, filtersRelation)
     }
 }
 

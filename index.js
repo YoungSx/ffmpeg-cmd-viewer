@@ -116,15 +116,14 @@ const filterComplexRelation = (filterStructs) => {
     }
 }
 
-const filterComplexGraph = (filters, filtersRelation) => {
-    for (let i = 0; i < filters.length; i++) {
-        const sourceFilter = filters[i]
-        const opt = sourceFilter['opt']
-        for (let j = 0; j < sourceFilter['out'].length; j++) {
-            const outPad = sourceFilter['out'][j]
-            const targetPos = filtersRelation['toMap'].get(outPad) // [filterIndex, inPadIndex]
-            const targetFilter = filters[targetPos[0]]
-            console.log(`${opt[0]}[${outPad}] -> [${targetFilter['in'][targetPos[1]]}]${targetFilter['opt'][0]}`)
+const filterComplexGraphD3Data = (filterDicts) => {
+    for (let i = 0; i < filterDicts.length; i++) {
+        const filters = filterComplexParser(filterDicts)
+        const filtersRelation = filterComplexRelation(filters)
+    
+        return {
+            "nodes": filterComplexGraphNode(filters),
+            "edges": filterComplexGraphLink(filters, filtersRelation)
         }
     }
 }

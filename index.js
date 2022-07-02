@@ -2,11 +2,6 @@ const haveCodecParams = str => {
     return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
 }
 
-const filterStringParser = (str) => {
-    const regex = new RegExp(`(?:;)`)
-    return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
-}
-
 /**
  * TODO: 去重
  * */
@@ -80,9 +75,10 @@ const ffmpegSingleParamParser = (str) => {
  */
 const filterComplexParser = (str) => {
     const result = []
-    const filters = filterStringParser(ffmpegSingleParamParser(str)[1])
+    const filters = ffmpegParamsParser(str, ';', -1)
 
     filters.forEach(filter => {
+        filter = filter['name']
         const filterStruct = {
             in: filterPadsInParser(filter),
             opt: filterOptParser(filter),

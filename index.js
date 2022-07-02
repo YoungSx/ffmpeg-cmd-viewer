@@ -207,7 +207,7 @@ const dump = (params, deep = -1) => {
     return result
 }
 
-const format = cmd => {
+const parser = cmd => {
     let result = []
     const codectedParams = codecParamsParser(cmd)
 
@@ -227,7 +227,11 @@ const format = cmd => {
             
         }
     })
-    return dump(result)
+    return result
+}
+
+const format = cmd => {
+    return dump(parser(cmd))
 }
 
 const test = () => {

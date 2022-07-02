@@ -73,9 +73,8 @@ const ffmpegSingleParamParser = (str) => {
  * 
  * Interface FilterStruct: Array<FilterStruct>
  */
-const filterComplexParser = (str) => {
+const filterComplexParser = (filters) => {
     const result = []
-    const filters = ffmpegParamsParser(str, ';', -1)
 
     filters.forEach(filter => {
         filter = filter['name']

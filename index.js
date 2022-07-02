@@ -57,7 +57,7 @@ const quoteParamsParser = (str) => {
     return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
 }
 
-const ffmpegSimgleParamParser = (str) => {
+const ffmpegSingleParamParser = (str) => {
     const regex = new RegExp(`(-[a-zA-Z0-9_-]+[ ]+)`)
     const regexQuote = new RegExp(`(((?<=\\')(.*)(?=\\'))|((?<=\\")(.*)(?=\\")))`, 'g')
     result = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
@@ -80,7 +80,7 @@ const ffmpegSimgleParamParser = (str) => {
  */
 const filterComplexParser = (str) => {
     const result = []
-    const filters = filterStringParser(ffmpegSimgleParamParser(str)[1])
+    const filters = filterStringParser(ffmpegSingleParamParser(str)[1])
 
     filters.forEach(filter => {
         const filterStruct = {
@@ -174,7 +174,7 @@ const ffmpegParamsParser = (str, separator = '-', position = -1) => {
     const params = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
 
     params.forEach(param => {
-        const paramArr = ffmpegSimgleParamParser(param)
+        const paramArr = ffmpegSingleParamParser(param)
 
         if ('-lavfi' == paramArr[0] || '-filter_complex' == paramArr[0]) {
             result.push({
@@ -213,7 +213,7 @@ const format = cmd => {
 
     codectedParams.forEach(param => {
         if (haveCodecParams(param)) {
-            const paramArr = ffmpegSimgleParamParser(param)
+            const paramArr = ffmpegSingleParamParser(param)
             result.push({
                 name: paramArr[0],
                 value: ffmpegParamsParser(paramArr[paramArr.length - 1], ':', -1)

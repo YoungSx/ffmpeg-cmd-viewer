@@ -1,15 +1,15 @@
 class FFmpegCmdViewer {
-    haveCodecParams = (str) => {
+    haveCodecParams (str) {
         return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
     }
 
-    filterPadsParser = (str) => {
+    filterPadsParser (str) {
         const regex = new RegExp(`(?<=\\[)(.+?)(?=\\])`, 'g')
         const result = str.match(regex)
         return result instanceof Array ? result.map(x => x.trim()).filter(x => '' !== x) : []
     }
 
-    filterPadsInParser = (str) => {
+    filterPadsInParser (str) {
         const filterPadsInStringParser = (str) => {
             const regex = new RegExp(`^(\\[\\S*?(?:\\]))+`, 'g')
             const result = str.match(regex)
@@ -22,7 +22,7 @@ class FFmpegCmdViewer {
         return this.filterPadsParser(padsInString)
     }
 
-    filterPadsOutParser = (str) => {
+    filterPadsOutParser (str) {
         const filterPadsOutStringParser = (str) => {
             const regex = new RegExp(`(?<=[^\\]])((\\[\\w*(?:\\]))+$)`, 'g')
             const result = str.match(regex)
@@ -35,22 +35,22 @@ class FFmpegCmdViewer {
         return this.filterPadsParser(padsOutString)
     }
 
-    filterOptParser = (str) => {
+    filterOptParser (str) {
         const regex = new RegExp(`(?:\\[)[^\\[\\]]*(?:\\])`)
         return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
     }
 
-    codecParamsParser = (str) => {
+    codecParamsParser (str) {
         const regex = new RegExp(`(-[a-zA-Z0-9]+-params[ ]+[^ ]+)`)
         return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
     }
 
-    quoteParamsParser = (str) => {
+    quoteParamsParser (str) {
         const regex = new RegExp(`(-[a-zA-Z0-9_-]+[ ]+(?:"(?:[^"]+)"|\'(?:[^\']+)\'))`)
         return str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
     }
 
-    ffmpegSingleParamParser = (str) => {
+    ffmpegSingleParamParser (str) {
         const regex = new RegExp(`(-[a-zA-Z0-9_-]+[ ]+)`)
         const regexQuote = new RegExp(`(((?<=\\')(.*)(?=\\'))|((?<=\\")(.*)(?=\\")))`, 'g')
         const result = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
@@ -70,7 +70,7 @@ class FFmpegCmdViewer {
      * 
      * Interface FilterStruct: Array<FilterStruct>
      */
-    filterComplexParser = (filters) => {
+    filterComplexParser (filters) {
         const result = []
 
         filters.forEach(filter => {
@@ -87,7 +87,7 @@ class FFmpegCmdViewer {
         return result
     }
 
-    filterComplexRelation = (filterStructs) => {
+    filterComplexRelation (filterStructs) {
         const padsFromMap = new Map()
         const padsToMap = new Map()
 
@@ -113,7 +113,7 @@ class FFmpegCmdViewer {
         }
     }
 
-    filterComplexGraphD3Data = (list) => {
+    filterComplexGraphD3Data (list) {
         let filterDicts = []
 
         for (let i = 0; i < list.length; i++)
@@ -131,7 +131,7 @@ class FFmpegCmdViewer {
         }
     }
 
-    filterComplexGraphNode = (filters) => {
+    filterComplexGraphNode (filters) {
         const result = []
 
         for (let i = 0; i < filters.length; i++) {
@@ -144,7 +144,7 @@ class FFmpegCmdViewer {
         return result
     }
 
-    filterComplexGraphLink = (filters, filtersRelation) => {
+    filterComplexGraphLink (filters, filtersRelation) {
         const result= []
 
         for (let i = 0; i < filters.length; i++) {
@@ -165,7 +165,7 @@ class FFmpegCmdViewer {
         return result
     }
 
-    ffmpegParamsParser = (str, separator = '-', position = -1) => {
+    ffmpegParamsParser (str, separator = '-', position = -1) {
         const result = []
         const regex = position < 0 ? new RegExp(`(?:${separator})`) : new RegExp(`(?=[ ]${separator})`)
         const params = str.trim().split(regex).map(x => x.trim()).filter(x => '' !== x)
@@ -188,7 +188,7 @@ class FFmpegCmdViewer {
         return result
     }
 
-    dump = (params, deep = -1) => {
+    dump (params, deep = -1) {
         const indentUnit = '    '
         let indent = ''
         let result = ''
@@ -204,7 +204,7 @@ class FFmpegCmdViewer {
         return result
     }
 
-    parser = cmd => {
+    parser (cmd) {
         let result = []
         const codectedParams = this.codecParamsParser(cmd)
 
@@ -227,7 +227,7 @@ class FFmpegCmdViewer {
         return result
     }
 
-    format = cmd => {
+    format (cmd) {
         return this.dump(this.parser(cmd))
     }
 }

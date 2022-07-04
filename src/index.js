@@ -149,10 +149,11 @@ class FFmpegCmdViewer {
 
         for (let i = 0; i < filters.length; i++) {
             const sourceFilter = filters[i]
-            const opt = sourceFilter['opt']
             for (let j = 0; j < sourceFilter['out'].length; j++) {
                 const outPad = sourceFilter['out'][j]
                 const targetPos = filtersRelation['toMap'].get(outPad) // [filterIndex, inPadIndex]
+                // no out
+                if (!targetPos) continue
                 const targetFilter = filters[targetPos[0]]
                 result.push({
                     "source": `${i}:${sourceFilter['opt']}`,

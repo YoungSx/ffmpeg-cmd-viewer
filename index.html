@@ -33,15 +33,15 @@
         window.fcv = fcv
     </script>
     <script>
-        const setFormatedText = (text) => {
+        const setformattedText = (text) => {
             document.querySelector("#cmd-view").innerHTML = text
         }
 
         const run = () => {
-            setFormatedText("")
+            setformattedText("")
             draw("")
             const inputText = document.querySelector("#cmd-input").value
-            setFormatedText(window.fcv.format(inputText))
+            setformattedText(window.fcv.format(inputText))
             draw(inputText)
         }
     </script>

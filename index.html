@@ -71,7 +71,7 @@
                 nodes: n,
                 edges: e
             }
-            let g = new dagreD3.graphlib.Graph()
+            let g = new dagreD3.graphlib.Graph({ multigraph: true })
             g.setGraph({
                 rankdir: 'LR',
                 align: 'UL',
@@ -95,7 +95,7 @@
                     arrowhead: "vee",
                     arrowheadStyle: "fill:#000",
                     curve: d3.curveBasis
-                })
+                }, item.label)
             })
             let render = new dagreD3.render()
 

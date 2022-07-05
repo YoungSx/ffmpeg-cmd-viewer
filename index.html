@@ -63,14 +63,8 @@
     
     <script>
         const draw = (cmd) => {
-            const t = window.fcv.filterComplexGraphD3Data(window.fcv.parser(cmd))
-            const n = t["nodes"]
-            const e = t["edges"]
+            const dataset = window.fcv.filterComplexGraphD3Data(window.fcv.parser(cmd))
 
-            let dataset = {
-                nodes: n,
-                edges: e
-            }
             let g = new dagreD3.graphlib.Graph({ multigraph: true })
             g.setGraph({
                 rankdir: 'LR',

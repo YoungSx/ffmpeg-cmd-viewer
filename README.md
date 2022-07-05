@@ -10,6 +10,6 @@
 
 ## Bug
 * formatted string 输出丢失
-* filter complex 两个节点间无法同时存在两条边
+* ~~filter complex 两个节点间无法同时存在两条边~~
 * 替换转义符
 * 负数被误解析成命令

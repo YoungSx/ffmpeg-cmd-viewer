@@ -69,7 +69,7 @@ class FFmpegCmdViewer {
         let result = Object.assign([], filters)
         const startFakeFilter = {
             in: [],
-            opt: 'start',
+            opt: ['start'],
             type: 'placeholder',
             out: []
         }
@@ -80,6 +80,30 @@ class FFmpegCmdViewer {
             })
         })
         if (startFakeFilter['out'].length > 0) result.unshift(startFakeFilter)
+
+        return result
+    }
+
+    insertEndPlaceholder (filters) {
+        let result = Object.assign([], filters)
+        const filtersRelation = this.filterComplexRelation(filters)
+
+        const endFakeFilter = {
+            in: [],
+            opt: ['end'],
+            type: 'placeholder',
+            out: []
+        }
+        for (let i = 0; i < filters.length; i++) {
+            const sourceFilter = filters[i]
+            for (let j = 0; j < sourceFilter['out'].length; j++) {
+                const outPad = sourceFilter['out'][j]
+                const targetPos = filtersRelation['toMap'].get(outPad) // [filterIndex, inPadIndex]
+                // no out
+                if (!targetPos) endFakeFilter['in'].push(outPad)
+            }
+        }
+        if (endFakeFilter['in'].length > 0) result.push(endFakeFilter)
 
         return result
     }
@@ -149,6 +173,7 @@ class FFmpegCmdViewer {
 
         let filters = this.filterComplexParser(filterDicts)
         filters = this.insertStartPlaceholder(filters)
+        filters = this.insertEndPlaceholder(filters)
         const filtersRelation = this.filterComplexRelation(filters)
 
         return {
@@ -172,7 +197,7 @@ class FFmpegCmdViewer {
     }
 
     filterComplexGraphLink (filters, filtersRelation) {
-        const result= []
+        const result = []
 
         for (let i = 0; i < filters.length; i++) {
             const sourceFilter = filters[i]

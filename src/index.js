@@ -3,6 +3,10 @@ class FFmpegCmdViewer {
         return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
     }
 
+    isStreamSpecifier (str) {
+        return str.search(/[0-9]:[vVasdt](:[0-9])?/i) >= 0
+    }
+
     filterPadsParser (str) {
         const regex = new RegExp(`(?<=\\[)(.+?)(?=\\])`, 'g')
         const result = str.match(regex)
@@ -61,10 +65,30 @@ class FFmpegCmdViewer {
         return result
     }
 
+    insertStartPlaceholder (filters) {
+        let result = Object.assign([], filters)
+        const startFakeFilter = {
+            in: [],
+            opt: 'start',
+            type: 'placeholder',
+            out: []
+        }
+        result.forEach(filter => {
+            const inPads = filter['in']
+            inPads.forEach(pad => {
+                if (this.isStreamSpecifier(pad)) startFakeFilter['out'].push(pad)
+            })
+        })
+        if (startFakeFilter['out'].length > 0) result.unshift(startFakeFilter)
+
+        return result
+    }
+
     /** 
      * Interface FilterStruct {
      *     in: Array<string>;
      *     opt: string;
+     *     type: string;
      *     out: Array<string>;
      * }
      * 
@@ -78,6 +102,7 @@ class FFmpegCmdViewer {
             const filterStruct = {
                 in: this.filterPadsInParser(filter),
                 opt: this.filterOptParser(filter),
+                type: 'opt',
                 out: this.filterPadsOutParser(filter)
             }
 
@@ -122,7 +147,8 @@ class FFmpegCmdViewer {
                 break
             }
 
-        const filters = this.filterComplexParser(filterDicts)
+        let filters = this.filterComplexParser(filterDicts)
+        filters = this.insertStartPlaceholder(filters)
         const filtersRelation = this.filterComplexRelation(filters)
 
         return {
@@ -138,6 +164,7 @@ class FFmpegCmdViewer {
             result.push({
                 "id": `${i}:${filters[i]['opt']}`,
                 "label": `${filters[i]['opt']}`,
+                "type": filters[i]['type'],
                 "shape": "rect"
             })
         }

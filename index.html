@@ -73,11 +73,15 @@
                 edgesep: 10,
                 ranksep: 50,
             })
+
+            const styleNode = "fill:#ECECFF;stroke:#9370DB;"
+            const styleNodeVirt = "fill:#FFFFFF;stroke:#9370DB;stroke-dasharray:4;"
+
             dataset.nodes.forEach(item => {
                 g.setNode(item.id, {
                     label: item.label,
                     shape: item.shape,
-                    style: "fill:#ECECFF;stroke:#9370DB",
+                    style: ('type' in item && 'placeholder' == item['type']) ? styleNodeVirt : styleNode,
                     labelStyle: "fill:#000"
                 })
             })

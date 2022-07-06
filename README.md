@@ -6,6 +6,7 @@
 # TODO
 ## Feature
 * ~~filter complex graph 绘制输入音视频流~~
+* filter complex graph 绘制输出
 * filter complex graph 标明 pads 输入输出顺序
 
 ## Bug

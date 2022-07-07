@@ -1,4 +1,8 @@
 class FFmpegCmdViewer {
+    _removeEscapeChar (str) {
+        return str.replace(/[\\]/g, '')
+    }
+
     haveCodecParams (str) {
         return str.search(/-[a-zA-Z0-9]+-params/i) >= 0
     }
@@ -259,7 +263,7 @@ class FFmpegCmdViewer {
 
     parser (cmd) {
         let result = []
-        const codectedParams = this.codecParamsParser(cmd)
+        const codectedParams = this.codecParamsParser(this._removeEscapeChar(cmd))
 
         codectedParams.forEach(param => {
             if (this.haveCodecParams(param)) {

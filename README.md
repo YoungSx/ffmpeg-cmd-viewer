@@ -12,6 +12,7 @@
 ## Bug
 * 无法清除上一次绘制
 * formatted string 输出丢失
+* description 字样丢失
 * ~~filter complex 两个节点间无法同时存在两条边~~
-* 替换转义符
+* ~~替换转义符~~
 * 负数被误解析成命令

@@ -1,0 +1,27 @@
+{
+  "name": "ffmpeg-cmd-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YoungSx/ffmpeg-cmd-viewer.git"
+  },
+  "author": {
+    "name": "Shangxin",
+    "email": "shangxin@outlook.com",
+    "url": "http://shangxin.me/"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/YoungSx/ffmpeg-cmd-viewer/issues"
+  },
+  "homepage": "https://github.com/YoungSx/ffmpeg-cmd-viewer#readme"
+}
